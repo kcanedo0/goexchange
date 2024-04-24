@@ -1,3 +1,44 @@
+-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgr4FVB+KEDUTzmX0s
+QbsjGZqXYumhmC4ZlKhCur5wrcegCgYIKoZIzj0DAQehRANCAATYUYqWMLVC8cZ+
+mLAruMPTU73EjccuXW3VbTPnooVagy1Yh1ttsGGg+LQRVYb8+uxfMJz5/LregonP
+zTTBjCb6
+-----END PRIVATE KEY-----
+
+com.gorentals.goexchange
+
+curl -v \
+-H "apns-topic: com.gorentals.goexchange" \
+-H "apns-push-type: alert" \
+-H "Authorization: bearer MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgr4FVB+KEDUTzmX0s
+QbsjGZqXYumhmC4ZlKhCur5wrcegCgYIKoZIzj0DAQehRANCAATYUYqWMLVC8cZ+
+mLAruMPTU73EjccuXW3VbTPnooVagy1Yh1ttsGGg+LQRVYb8+uxfMJz5/LregonP
+zTTBjCb6" \
+-d '{
+    "aps": {
+        "alert": {
+            "title": "Test Notification",
+            "body": "This is a test notification."
+        },
+        "sound": "default"
+    }
+}' \
+https://api.development.push.apple.com/3/device/DEVICE_TOKEN
+
+curl -X POST \
+  -H "Authorization: key=YOUR_SERVER_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "notification": {
+          "title": "Test Notification",
+          "body": "This is a test notification"
+        },
+        "to": "DEVICE_TOKEN"
+      }' \
+  https://fcm.googleapis.com/fcm/send
+
+
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -6,24 +47,13 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-  NativeModules,
-  NativeEventEmitter,
-} from 'react-native';
-
-const { NotificationManager } = NativeModules;
-
-// const eventEmitter = new NativeEventEmitter(NotificationManager);
+import { Button, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 
 import { WebView } from 'react-native-webview';
 import Biometrics from 'react-native-biometrics';
 import TouchID from 'react-native-touch-id';
-
+import PushNotification from 'react-native-push-notification';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 function App(): React.JSX.Element {
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
@@ -98,12 +128,6 @@ function App(): React.JSX.Element {
   useEffect(() => {
     sendDataToWebView();
     setExpirationDate(new Date(Date.now() + 20 * 60 * 1000));
-    NotificationManager.getNativeString((nativeString: string) => {
-      console.log(nativeString + ' from native module');
-    });
-    NotificationManager.getDeviceToken(deviceToken => {
-      console.log(deviceToken + ' from native module Device Token');
-    });
   }, []);
 
   const webviewRef = useRef<WebView | null>(null);
@@ -130,9 +154,7 @@ function App(): React.JSX.Element {
   //   const result = PushNotificationIOS.FetchResult.NoData;
   //   notification.finish(result);
   // };
-  // eventEmitter.addListener('DeviceTokenReceived', event => {
-  //   console.log(event); // This will log the device token
-  // });
+
   // useEffect(() => {
   //   // Request permissions when component mounts
   //   PushNotificationIOS.requestPermissions();
@@ -166,37 +188,37 @@ function App(): React.JSX.Element {
   //   console.log('Device Token:', deviceToken);
   // };
 
-  // const [permissions, setPermissions] = useState({});
+  const [permissions, setPermissions] = useState({});
 
-  // useEffect(() => {
-  //   const type = 'notification';
-  //   PushNotificationIOS.addEventListener(type, onRemoteNotification);
-  //   return () => {
-  //     PushNotificationIOS.removeEventListener(type);
-  //   };
-  // });
+  useEffect(() => {
+    const type = 'notification';
+    PushNotificationIOS.addEventListener(type, onRemoteNotification);
+    return () => {
+      PushNotificationIOS.removeEventListener(type);
+    };
+  });
 
-  // const onRemoteNotification = (notification) => {
-  //   const isClicked = notification.getData().userInteraction === 1;
+  const onRemoteNotification = (notification) => {
+    const isClicked = notification.getData().userInteraction === 1;
 
-  //   if (isClicked) {
-  //     // Navigate user to another screen
-  //   } else {
-  //     // Do something else with push notification
-  //   }
-  //   // Use the appropriate result based on what you needed to do for this notification
-  //   const result = PushNotificationIOS.FetchResult.NoData;
-  //   notification.finish(result);
-  // };
+    if (isClicked) {
+      // Navigate user to another screen
+    } else {
+      // Do something else with push notification
+    }
+    // Use the appropriate result based on what you needed to do for this notification
+    const result = PushNotificationIOS.FetchResult.NoData;
+    notification.finish(result);
+  };
 
-  // const sendTestNotification = () => {
-  //   // Send a test notification
-  //   PushNotificationIOS.presentLocalNotification({
-  //     alertTitle: 'Test Notification',
-  //     alertBody: 'This is a test notification',
-  //     applicationIconBadgeNumber: 1, // Increment app badge number
-  //   });
-  // };
+  const sendTestNotification = () => {
+    // Send a test notification
+    PushNotificationIOS.presentLocalNotification({
+      alertTitle: 'Test Notification',
+      alertBody: 'This is a test notification',
+      applicationIconBadgeNumber: 1, // Increment app badge number
+    });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
