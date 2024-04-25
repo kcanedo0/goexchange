@@ -55,5 +55,18 @@
 		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
+	<key>NSRemoteNotification</key>
+	<true/>
+	<key>UIUserNotificationType</key>
+	<dict>
+		<key>UIUserNotificationTypeAlert</key>
+		<string>YES</string>
+		<key>UIUserNotificationTypeBadge</key>
+		<string>YES</string>
+		<key>UIUserNotificationTypeSound</key>
+		<string>YES</string>
+	</dict>
+	<key>UILocalNotificationDefaultSoundName</key>
+	<string>CustomSoundFile.wav</string>
 </dict>
 </plist>

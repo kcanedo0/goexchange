@@ -28,6 +28,7 @@ import TouchID from 'react-native-touch-id';
 function App(): React.JSX.Element {
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
   const [isFaceRequired, setIsFaceRequired] = useState(false);
+  const [deviceToken, setDeviceToken] = useState('');
   // Construct the URL with the query string
   // let url = `http://10.100.7.243:3000/login?source=${source}`;
   const url =
@@ -59,11 +60,11 @@ function App(): React.JSX.Element {
           ExpirationDate: expirationDate,
         };
         webviewRef.current?.postMessage(JSON.stringify(postData));
-        setIsFaceRequired(false);
+        // setIsFaceRequired(false);
         // }
       })
       .catch(error => {
-        // console.error('Authentication failed:', error) 
+        // console.error('Authentication failed:', error)
         if (
           error.name === 'LAErrorUserCancel' ||
           error.name === 'LAErrorSystemCancel'
@@ -78,9 +79,41 @@ function App(): React.JSX.Element {
       });
   };
 
+  const handleCreateDeviceToken = async (user_id: string) => {
+    try {
+      const result = await fetch('http://10.110.7.39:5000/dt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          device_token: deviceToken,
+          user_id,
+        }),
+      });
+      const response = await result.json();
+      console.log(
+        'Device Token Created Successfully',
+        JSON.stringify(response, null, 2),
+      );
+    } catch (error) {
+      console.error('Error creating device token', error);
+    }
+  };
+
   function onMessage(data: any) {
-    setIsFaceRequired(data.nativeEvent.data);
-    // alert(data.nativeEvent.data);
+    const result = JSON.parse(data.nativeEvent?.data);
+
+    const { isFaceIdRequired: showBiometric, user_id } = result || {};
+
+    if (showBiometric) {
+      return checkBiometrics();
+    }
+
+    if (user_id) {
+      return handleCreateDeviceToken(user_id);
+    }
+    console.log(data.nativeEvent?.data);
   }
 
   function sendDataToWebView() {
@@ -90,113 +123,22 @@ function App(): React.JSX.Element {
   }
 
   useEffect(() => {
-    if (isFaceRequired) {
-      checkBiometrics();
-    }
-  }, [isFaceRequired]);
-
-  useEffect(() => {
     sendDataToWebView();
     setExpirationDate(new Date(Date.now() + 20 * 60 * 1000));
     NotificationManager.getNativeString((nativeString: string) => {
       console.log(nativeString + ' from native module');
     });
     NotificationManager.getDeviceToken(deviceToken => {
-      console.log(deviceToken + ' from native module Device Token');
+      setDeviceToken(deviceToken);
+      console.log(deviceToken + ' from native module');
     });
+    // NotificationManager.sendRouteAndUserId((route, userId) => {
+    //   console.log(route); // This will log the route
+    //   console.log(userId); // This will log the user_id
+    // });
   }, []);
 
   const webviewRef = useRef<WebView | null>(null);
-
-  // const [permissions, setPermissions] = useState({});
-
-  // useEffect(() => {
-  //   const type = 'notification';
-  //   PushNotificationIOS.addEventListener(type, onRemoteNotification);
-  //   return () => {
-  //     PushNotificationIOS.removeEventListener(type);
-  //   };
-  // });
-
-  // const onRemoteNotification = (notification) => {
-  //   const isClicked = notification.getData().userInteraction === 1;
-
-  //   if (isClicked) {
-  //     // Navigate user to another screen
-  //   } else {
-  //     // Do something else with push notification
-  //   }
-  //   // Use the appropriate result based on what you needed to do for this notification
-  //   const result = PushNotificationIOS.FetchResult.NoData;
-  //   notification.finish(result);
-  // };
-  // eventEmitter.addListener('DeviceTokenReceived', event => {
-  //   console.log(event); // This will log the device token
-  // });
-  // useEffect(() => {
-  //   // Request permissions when component mounts
-  //   PushNotificationIOS.requestPermissions();
-
-  //   // Add event listener for receiving notifications
-  //   const subscription = PushNotificationIOS.addEventListener(
-  //     'notification',
-  //     handleNotification
-  //   );
-
-  //   // Add event listener for getting device token
-  //   const tokenSubscription = PushNotificationIOS.addEventListener(
-  //     'register',
-  //     handleRegister
-  //   );
-
-  //   return () => {
-  //     // Remove event listeners when component unmounts
-  //     subscription.remove();
-  //     tokenSubscription.remove();
-  //   };
-  // }, []);
-
-  // const handleNotification = (notification) => {
-  //   // Handle received notification
-  //   console.log('Received Notification:', notification);
-  // };
-
-  // const handleRegister = (deviceToken) => {
-  //   // Handle device token
-  //   console.log('Device Token:', deviceToken);
-  // };
-
-  // const [permissions, setPermissions] = useState({});
-
-  // useEffect(() => {
-  //   const type = 'notification';
-  //   PushNotificationIOS.addEventListener(type, onRemoteNotification);
-  //   return () => {
-  //     PushNotificationIOS.removeEventListener(type);
-  //   };
-  // });
-
-  // const onRemoteNotification = (notification) => {
-  //   const isClicked = notification.getData().userInteraction === 1;
-
-  //   if (isClicked) {
-  //     // Navigate user to another screen
-  //   } else {
-  //     // Do something else with push notification
-  //   }
-  //   // Use the appropriate result based on what you needed to do for this notification
-  //   const result = PushNotificationIOS.FetchResult.NoData;
-  //   notification.finish(result);
-  // };
-
-  // const sendTestNotification = () => {
-  //   // Send a test notification
-  //   PushNotificationIOS.presentLocalNotification({
-  //     alertTitle: 'Test Notification',
-  //     alertBody: 'This is a test notification',
-  //     applicationIconBadgeNumber: 1, // Increment app badge number
-  //   });
-  // };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

@@ -14,15 +14,18 @@ NSString *deviceTokenString;
   self.initialProps = @{};
 
   // Request permission to send notifications
-   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-   [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound + UNAuthorizationOptionBadge)
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert + UNAuthorizationOptionSound + UNAuthorizationOptionBadge)
                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
-     if (granted) {
-       dispatch_async(dispatch_get_main_queue(), ^{
-         [[UIApplication sharedApplication] registerForRemoteNotifications];
-       });
-     }
-   }];
+    if (granted) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+      });
+    }
+  }];
+
+  // Set the delegate
+  center.delegate = self;
   
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
@@ -39,8 +42,7 @@ NSString *deviceTokenString;
 
   NSLog(@"Device Token: %@", hexString);
   
-  deviceTokenString = hexString;
-  NSAssert(deviceTokenString != nil, @"deviceTokenString must not be nil");
+  self.deviceTokenString = hexString;
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -50,6 +52,11 @@ NSString *deviceTokenString;
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
   NSLog(@"Received remote notification: %@", userInfo);
   completionHandler(UIBackgroundFetchResultNoData);
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+  // Show the notification alert
+  completionHandler(UNNotificationPresentationOptionAlert + UNNotificationPresentationOptionSound + UNNotificationPresentationOptionBadge);
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
