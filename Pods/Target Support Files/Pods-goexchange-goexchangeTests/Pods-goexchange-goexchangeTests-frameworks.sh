@@ -175,6 +175,9 @@ code_sign_if_enabled() {
   fi
 }
 
+if [[ "$CONFIGURATION" == "Adhoc" ]]; then
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework"
+fi
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-DoubleConversion/double-conversion.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/Flipper-Glog/glog.framework"

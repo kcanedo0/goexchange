@@ -26,6 +26,7 @@ if linkage != nil
 end
 
 target 'goexchange' do
+  pod 'CocoaAsyncSocket'
   config = use_native_modules!
 
   use_react_native!(
