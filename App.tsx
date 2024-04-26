@@ -18,24 +18,36 @@ import {
 
 const { NotificationManager } = NativeModules;
 
-// const eventEmitter = new NativeEventEmitter(NotificationManager);
+const eventEmitter = new NativeEventEmitter(NotificationManager);
 
 import { WebView } from 'react-native-webview';
 import Biometrics from 'react-native-biometrics';
 import TouchID from 'react-native-touch-id';
-
+import Config from 'react-native-ultimate-config';
 
 function App(): React.JSX.Element {
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
-  const [isFaceRequired, setIsFaceRequired] = useState(false);
+  // const [isFaceRequired, setIsFaceRequired] = useState(false);
   const [deviceToken, setDeviceToken] = useState('');
-  // Construct the URL with the query string
+  const [didReceivedNotification, setDidReceivedNotification] = useState(false);
+  // const [url, setUrl] = useState(
+  //   'http://10.100.7.243:3000/login?' +
+  //     new URLSearchParams({
+  //       source: 'mobile',
+  //     }),
+  // );
+  const [url, setUrl] = useState(
+    `${Config.API_URL}/login?` +
+      new URLSearchParams({
+        source: Config.SOURCE,
+      }),
+  );
   // let url = `http://10.100.7.243:3000/login?source=${source}`;
-  const url =
-    'http://10.100.7.243:3000/login?' +
-    new URLSearchParams({
-      source: 'mobile',
-    });
+  // const url =
+  //   'http://10.100.7.243:3000/login?' +
+  //   new URLSearchParams({
+  //     source: 'mobile',
+  //   });
   const [biometryType, setBiometryType] = useState('');
 
   const checkBiometrics = () => {
@@ -73,15 +85,15 @@ function App(): React.JSX.Element {
           const cancelData = {
             onCancel: true,
           };
-          webviewRef.current?.postMessage(JSON.stringify(cancelData));
-          setIsFaceRequired(false);
+          // webviewRef.current?.postMessage(JSON.stringify(cancelData));
+          // setIsFaceRequired(false);
         }
       });
   };
 
   const handleCreateDeviceToken = async (user_id: string) => {
     try {
-      const result = await fetch('http://10.110.7.39:5000/dt', {
+      const result = await fetch('${Config.API_URL}/dt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,6 +135,7 @@ function App(): React.JSX.Element {
   }
 
   useEffect(() => {
+    console.log(Config.API_URL);
     sendDataToWebView();
     setExpirationDate(new Date(Date.now() + 20 * 60 * 1000));
     NotificationManager.getNativeString((nativeString: string) => {
@@ -132,10 +145,16 @@ function App(): React.JSX.Element {
       setDeviceToken(deviceToken);
       console.log(deviceToken + ' from native module');
     });
-    // NotificationManager.sendRouteAndUserId((route, userId) => {
-    //   console.log(route); // This will log the route
-    //   console.log(userId); // This will log the user_id
-    // });
+    eventEmitter.addListener('RemoteNotificationReceived', event => {
+      setDidReceivedNotification(true);
+      setUrl(`${Config.API_URL}${event.route}`);
+      setDidReceivedNotification(false);
+    });
+
+    // Equivalent to componentWillUnmount
+    // return () => {
+    //   eventListener.remove(); // Remember to remove the listener when you are done with it
+    // };
   }, []);
 
   const webviewRef = useRef<WebView | null>(null);
@@ -157,18 +176,42 @@ function App(): React.JSX.Element {
           </Text>
         </TouchableOpacity>
       </View> */}
-      <WebView
-        // source={{
-        //   uri: 'http://10.100.7.243:3000?source=mobile',
-        //   method: 'POST',
-        // }}
-        source={{
-          uri: url,
-          method: 'POST',
-        }}
-        ref={webviewRef}
-        onMessage={onMessage}
-      />
+      {/* {didReceivedNotification ? (
+        <WebView
+          source={{
+            uri: url,
+          }}
+          ref={webviewRef}
+          onMessage={onMessage}
+        />
+      ) : (
+        <WebView
+          source={{
+            uri: url,
+            method: 'POST',
+          }}
+          ref={webviewRef}
+          onMessage={onMessage}
+        />
+      )} */}
+      {didReceivedNotification ? (
+        <WebView
+          source={{
+            uri: url,
+          }}
+          ref={webviewRef}
+          onMessage={onMessage}
+        />
+      ) : (
+        <WebView
+          source={{
+            uri: url,
+            method: 'POST',
+          }}
+          ref={webviewRef}
+          onMessage={onMessage}
+        />
+      )}
       {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Biometry Type: {biometryType}</Text>
         <Button title="Check Biometrics" onPress={checkBiometrics} />

@@ -2,6 +2,9 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <UserNotifications/UserNotifications.h>
+#import "NotificationManager.h"
+#import <React/RCTBridge.h>
+#import <React/RCTEventDispatcher.h>
 
 @implementation AppDelegate
 NSString *deviceTokenString;
@@ -51,6 +54,9 @@ NSString *deviceTokenString;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
   NSLog(@"Received remote notification: %@", userInfo);
+
+  [self.bridge.eventDispatcher sendAppEventWithName:@"RemoteNotificationReceived" body:userInfo];
+
   completionHandler(UIBackgroundFetchResultNoData);
 }
 

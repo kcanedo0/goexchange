@@ -8,7 +8,8 @@
 #import "NotificationManager.h"
 #import <React/RCTLog.h>
 #import "AppDelegate.h"
-
+#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 @implementation NotificationManager
 
 RCT_EXPORT_MODULE();
@@ -30,4 +31,11 @@ RCT_EXPORT_METHOD(getDeviceToken:(RCTResponseSenderBlock)callback)
   }
 }
 
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"RemoteNotificationReceived"];
+}
+
+- (void)sendEventToReactNative:(NSDictionary *)userInfo {
+  [self sendEventWithName:@"RemoteNotificationReceived" body:userInfo];
+}
 @end

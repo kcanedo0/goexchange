@@ -15,6 +15,7 @@
     "react-native": "0.73.7",
     "react-native-push-notification": "^8.1.1",
     "react-native-touch-id": "^4.4.1",
+    "react-native-ultimate-config": "^6.0.1",
     "react-native-webview": "^13.8.6"
   },
   "devDependencies": {

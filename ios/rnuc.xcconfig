@@ -1,5 +1,3 @@
 // DO NOT COMMIT OR EDIT THIS FILE
-NEXT_PUBLIC_SAMPLE_NEXT_API=http:/$()/10.110.7.39:5000
-NEXT_PUBLIC_FORM_TIMEOUT=600000
-NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL=https:/$()/files.gorentals.dnamicro.net/go-qa-files/Go%20Rentals%20-%20Master%20Rental%20Agreement%20Terms%20and%20Conditions%20%28231461%29_2.pdf
-CONSUL_URL=http:/$()/10.110.7.39:5000
+API_URL=http:/$()/10.100.7.243:3000/
+SOURCE=mobile
