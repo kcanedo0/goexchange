@@ -24,6 +24,7 @@ import { WebView } from 'react-native-webview';
 import Biometrics from 'react-native-biometrics';
 import TouchID from 'react-native-touch-id';
 import Config from 'react-native-ultimate-config';
+import MobileView from './src/components/MobileView';
 
 function App(): React.JSX.Element {
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
@@ -31,13 +32,13 @@ function App(): React.JSX.Element {
   const [deviceToken, setDeviceToken] = useState('');
   const [didReceivedNotification, setDidReceivedNotification] = useState(false);
   // const [url, setUrl] = useState(
-  //   'http://10.100.7.243:3000/login?' +
+  //   'https://goexchange.v1.dnastaging.net/login?' +
   //     new URLSearchParams({
   //       source: 'mobile',
   //     }),
   // );
   const [url, setUrl] = useState(
-    `${Config.API_URL}/login?` +
+    `${Config.PORTAL_URL}/login?` +
       new URLSearchParams({
         source: Config.SOURCE,
       }),
@@ -93,21 +94,24 @@ function App(): React.JSX.Element {
 
   const handleCreateDeviceToken = async (user_id: string) => {
     try {
-      const result = await fetch('${Config.API_URL}/dt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          device_token: deviceToken,
-          user_id,
-        }),
-      });
-      const response = await result.json();
-      console.log(
-        'Device Token Created Successfully',
-        JSON.stringify(response, null, 2),
-      );
+      if (deviceToken && deviceToken !== null) {
+        console.log('Device Token Already Exists' + deviceToken);
+        const result = await fetch(`${Config.API_URL}/dt`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            device_token: deviceToken,
+            user_id,
+          }),
+        });
+        const response = await result.json();
+        console.log(
+          'Device Token Created Successfully',
+          JSON.stringify(response, null, 2),
+        );
+      }
     } catch (error) {
       console.error('Error creating device token', error);
     }
@@ -135,21 +139,23 @@ function App(): React.JSX.Element {
   }
 
   useEffect(() => {
-    console.log(Config.API_URL);
+    console.log(url);
     sendDataToWebView();
     setExpirationDate(new Date(Date.now() + 20 * 60 * 1000));
     NotificationManager.getNativeString((nativeString: string) => {
       console.log(nativeString + ' from native module');
     });
-    NotificationManager.getDeviceToken(deviceToken => {
-      setDeviceToken(deviceToken);
-      console.log(deviceToken + ' from native module');
-    });
-    eventEmitter.addListener('RemoteNotificationReceived', event => {
-      setDidReceivedNotification(true);
-      setUrl(`${Config.API_URL}${event.route}`);
-      setDidReceivedNotification(false);
-    });
+    // NotificationManager.getDeviceToken(deviceToken => {
+    //   setDeviceToken(deviceToken);
+    //   console.log(deviceToken + ' from native module');
+    // });
+    // eventEmitter.addListener('RemoteNotificationReceived', event => {
+    //   console.log(`${Config.API_URL}${event.route}`);
+    //   setDidReceivedNotification(true);
+    //   setUrl(`${Config.API_URL}${event.route}`);
+    //   alert(url);
+    //   setDidReceivedNotification(false);
+    // });
 
     // Equivalent to componentWillUnmount
     // return () => {
@@ -157,10 +163,35 @@ function App(): React.JSX.Element {
     // };
   }, []);
 
+  useEffect(() => {
+    const getDeviceToken = () => {
+      NotificationManager.getDeviceToken(deviceToken => {
+        if (deviceToken) {
+          setDeviceToken(deviceToken);
+          console.log(deviceToken + ' from native module');
+        } else {
+          // If the device token is null, retry after a delay
+          setTimeout(getDeviceToken, 5000); // Retry after 5 seconds
+        }
+      });
+    };
+
+    getDeviceToken();
+  }, []);
+  useEffect(() => {
+    eventEmitter.addListener('RemoteNotificationReceived', event => {
+      console.log(event);
+      setDidReceivedNotification(true);
+      setUrl(`${Config.PORTAL_URL}${event.route}`);
+      setDidReceivedNotification(false);
+    });
+  }, []);
+
   const webviewRef = useRef<WebView | null>(null);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      {/* <MobileView /> */}
       {/* <View style={{ alignItems: 'center' }}>
         <TouchableOpacity
           onPress={() => sendDataToWebView()}
@@ -206,7 +237,6 @@ function App(): React.JSX.Element {
         <WebView
           source={{
             uri: url,
-            method: 'POST',
           }}
           ref={webviewRef}
           onMessage={onMessage}

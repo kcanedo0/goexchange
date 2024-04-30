@@ -17,7 +17,7 @@ import Config from 'react-native-ultimate-config';
 function MobileView() {
   const webviewRef = useRef<WebView | null>(null);
   const [url, setUrl] = useState(
-    '${Config.API_URL}/login?' +
+    `${Config.API_URL}/login?` +
       new URLSearchParams({
         source: Config.SOURCE,
       }),
@@ -69,7 +69,7 @@ function MobileView() {
 
   const handleCreateDeviceToken = async (user_id: string) => {
     try {
-      const result = await fetch('${Config.API_URL}/dt', {
+      const result = await fetch(`${Config.API_URL}/dt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ function MobileView() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* {didReceivedNotification ? (
+      {didReceivedNotification ? (
         <WebView
           source={{
             uri: url,
@@ -155,12 +155,12 @@ function MobileView() {
           ref={webviewRef}
           onMessage={onMessage}
         />
-      )} */}
-      <WebView
+      )}
+      {/* <WebView
         ref={webviewRef}
         source={{ uri: 'http://localhost:3000?source=mobile' }}
         onMessage={onMessage}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

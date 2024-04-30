@@ -35,8 +35,13 @@ NSString *deviceTokenString;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
   const unsigned char *dataBuffer = (const unsigned char *)[deviceToken bytes];
-  if (!dataBuffer)
+  if (!dataBuffer) {
+    // If the device token is null, attempt to register for remote notifications again
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [[UIApplication sharedApplication] registerForRemoteNotifications];
+    });
     return;
+  }
 
   NSUInteger dataLength = [deviceToken length];
   NSMutableString *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
@@ -44,7 +49,7 @@ NSString *deviceTokenString;
     [hexString appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
 
   NSLog(@"Device Token: %@", hexString);
-  
+
   self.deviceTokenString = hexString;
 }
 

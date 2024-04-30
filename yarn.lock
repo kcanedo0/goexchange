@@ -2967,7 +2967,7 @@ doctrine@^3.0.0:
 
 dotenv@^16:
   version "16.4.5"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.5.tgz#cdd3b3b604cb327e286b4762e13502f717cb099f"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.5.tgz"
   integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
 
 ee-first@1.1.1:
@@ -3695,7 +3695,7 @@ graphemer@^1.4.0:
 
 handlebars@^4.7.7:
   version "4.7.8"
-  resolved "https://registry.npmjs.org/handlebars/-/handlebars-4.7.8.tgz#41c42c18b1be2365439188c77c6afae71c0cd9e9"
+  resolved "https://registry.npmjs.org/handlebars/-/handlebars-4.7.8.tgz"
   integrity sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==
   dependencies:
     minimist "^1.2.5"
@@ -5584,7 +5584,7 @@ react-native-touch-id@^4.4.1:
 
 react-native-ultimate-config@^6.0.1:
   version "6.0.1"
-  resolved "https://registry.npmjs.org/react-native-ultimate-config/-/react-native-ultimate-config-6.0.1.tgz#c1ed3f687a02a0f25713e88e61b4fd97644e4a2a"
+  resolved "https://registry.npmjs.org/react-native-ultimate-config/-/react-native-ultimate-config-6.0.1.tgz"
   integrity sha512-fIUgqW6Yt0dAKwmpi+eqyL2B5uYNLvyZekYC2iJg2KGLapGvf6ORCeKXU5U0yLnVt7DnC7qV8TDRIKJ0+LNpwg==
   dependencies:
     dotenv "^16"
@@ -6437,7 +6437,7 @@ typescript@5.0.4:
 
 uglify-js@^3.1.4:
   version "3.17.4"
-  resolved "https://registry.npmjs.org/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
+  resolved "https://registry.npmjs.org/uglify-js/-/uglify-js-3.17.4.tgz"
   integrity sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==
 
 unbox-primitive@^1.0.2:
@@ -6628,7 +6628,7 @@ which@^2.0.1:
 
 wordwrap@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.npmjs.org/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
+  resolved "https://registry.npmjs.org/wordwrap/-/wordwrap-1.0.0.tgz"
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
 wrap-ansi@^6.2.0:

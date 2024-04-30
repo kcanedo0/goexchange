@@ -1,3 +1,4 @@
 // DO NOT COMMIT OR EDIT THIS FILE
-API_URL=http:/$()/10.100.7.243:3000/
+PORTAL_URL=https:/$()/goexchange.v1.dnastaging.net
+API_URL=https:/$()/api.v2.goexchange.gorentals.dnastaging.net
 SOURCE=mobile

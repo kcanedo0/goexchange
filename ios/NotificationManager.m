@@ -27,7 +27,7 @@ RCT_EXPORT_METHOD(getDeviceToken:(RCTResponseSenderBlock)callback)
   if (appDelegate.deviceTokenString != nil) {
     callback(@[appDelegate.deviceTokenString]);
   } else {
-    callback(@[@"Device token not available"]);
+    callback(@[[NSNull null]]);
   }
 }
 
