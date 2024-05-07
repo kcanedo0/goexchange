@@ -62,6 +62,10 @@ NSString *deviceTokenString;
 
   [self.bridge.eventDispatcher sendAppEventWithName:@"RemoteNotificationReceived" body:userInfo];
 
+  // Increment the notification badge
+  NSInteger currentBadgeCount = [UIApplication sharedApplication].applicationIconBadgeNumber;
+  [UIApplication sharedApplication].applicationIconBadgeNumber = currentBadgeCount + 1;
+
   completionHandler(UIBackgroundFetchResultNoData);
 }
 
