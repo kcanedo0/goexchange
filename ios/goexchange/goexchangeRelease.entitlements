@@ -4,7 +4,7 @@
 <dict>
 	<key>aps-environment</key>
 	<string>production</string>
-		<key>com.apple.developer.associated-domains</key>
+	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>webcredentials:https://main--reliable-haupia-533023.netlify.app/</string>
 	</array>

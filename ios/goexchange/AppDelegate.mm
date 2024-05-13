@@ -62,15 +62,24 @@ NSString *deviceTokenString;
 
   [self.bridge.eventDispatcher sendAppEventWithName:@"RemoteNotificationReceived" body:userInfo];
 
-  // Increment the notification badge
+  if (application.applicationState == UIApplicationStateActive) {
+    application.applicationIconBadgeNumber = 0;
+  }
+
   NSInteger currentBadgeCount = [UIApplication sharedApplication].applicationIconBadgeNumber;
   [UIApplication sharedApplication].applicationIconBadgeNumber = currentBadgeCount + 1;
 
   completionHandler(UIBackgroundFetchResultNoData);
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+
+  application.applicationIconBadgeNumber = 0;
+  
+}
+
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
-  // Show the notification alert
+
   completionHandler(UNNotificationPresentationOptionAlert + UNNotificationPresentationOptionSound + UNNotificationPresentationOptionBadge);
 }
 

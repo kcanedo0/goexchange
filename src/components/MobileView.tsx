@@ -5,6 +5,7 @@ import {
   NativeModules,
   NativeEventEmitter,
   AppState,
+  Alert,
 } from 'react-native';
 
 import TouchID from 'react-native-touch-id';
@@ -12,9 +13,6 @@ import Config from 'react-native-ultimate-config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { decode } from 'base-64';
 
-if (!global.atob) {
-  global.atob = decode;
-}
 function MobileView() {
   const webviewRef = useRef<WebView | null>(null);
   const [url, setUrl] = useState(
@@ -31,6 +29,8 @@ function MobileView() {
   const { NotificationManager } = NativeModules;
   const eventEmitter = new NativeEventEmitter(NotificationManager);
   const [appState, setAppState] = useState(AppState.currentState);
+  const [isLogout, setIsLogout] = useState(false);
+  const [autoIncrementingNumber, setAutoIncrementingNumber] = useState(0);
 
   function sendDataToWebView() {
     if (webviewRef.current) {
@@ -53,7 +53,6 @@ function MobileView() {
     //   checkBiometrics();
     // }
     if (decodedPayload.exp > currentUnixTimestamp) {
-      console.log(token + 'Token');
       if (showURL) {
         setShowWebView(false);
       }
@@ -78,12 +77,43 @@ function MobileView() {
 
   useEffect(() => {
     eventEmitter.addListener('RemoteNotificationReceived', event => {
-      console.log(event);
+      // const notification_id = event.notification_id;
       // setDidReceivedNotification(true);
+      handleReadNotification(event.notification_id);
       setUrl(`${Config.PORTAL_URL}${event.route}`);
       // setDidReceivedNotification(false);
     });
   }, []);
+
+  const handleReadNotification = async (notification_id: string) => {
+    let token = await AsyncStorage.getItem('Token');
+    if (token) {
+      token = token.replace(/"/g, '');
+    }
+    if (notification_id) {
+      try {
+        const result = await fetch(
+          `${Config.API_URL}/notifications/${notification_id}`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              status: 'Read',
+              read_at: new Date().toISOString(),
+            }),
+          },
+        );
+        const response = await result.json();
+        console.log(
+          'Update Notification Status to Read Successfully',
+          JSON.stringify(response, null, 2),
+        );
+      } catch (error) {}
+    }
+  };
 
   useEffect(() => {
     sendDataToWebView();
@@ -95,8 +125,12 @@ function MobileView() {
 
   async function onMessage(data: any) {
     const result = JSON.parse(data.nativeEvent?.data);
-    console.log(result);
-    const { token, isFaceIdRequired: showBiometric, user_id } = result || {};
+    const {
+      token,
+      isFaceIdRequired: showBiometric,
+      user_id,
+      logout: deleteStorage,
+    } = result || {};
 
     if (token) {
       console.log('Access Token', token);
@@ -116,7 +150,18 @@ function MobileView() {
       // setIsSetData(showBiometric);
       return checkBiometrics();
     }
+
+    if (deleteStorage) {
+      setIsLogout(true);
+      await AsyncStorage.clear();
+      console.log('Storage Cleared');
+      webviewRef.current?.reload();
+    }
   }
+
+  useEffect(() => {
+    console.log('Logout' + isLogout);
+  }, [isLogout]);
 
   const handleCreateDeviceToken = async (user_id: string) => {
     try {
@@ -186,7 +231,6 @@ function MobileView() {
     })
       .then((success: any) => {
         // if (!showURL) {
-        console.log('Im here');
         setShowWebView(true);
         // if (didReceivedNotification) {
         const postData = {
@@ -196,7 +240,7 @@ function MobileView() {
         webviewRef.current?.postMessage(JSON.stringify(postData));
       })
       .catch((error: { name: string }) => {
-        // console.error('Authentication failed:', error)
+        console.error('Authentication failed:', error);
         if (
           error.name === 'LAErrorUserCancel' ||
           error.name === 'LAErrorSystemCancel'
@@ -210,48 +254,30 @@ function MobileView() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* {showURL ? (
+      {showWebView ? (
         <WebView
+          key={autoIncrementingNumber}
           source={{ uri: url }}
           ref={webviewRef}
           onMessage={onMessage}
-          // onLoadEnd={sendDataToWebView}
-        />
-      ) : (
-        <></>
-      )} */}
-      {showWebView ? (
-        <WebView
-          source={{
-            uri: url,
-          }}
-          ref={webviewRef}
-          onMessage={onMessage}
+          javaScriptEnabled={true}
+          originWhitelist={['*']}
           onNavigationStateChange={async navState => {
             await AsyncStorage.setItem('URL', JSON.stringify(navState.url));
+            console.log(navState.url);
             setUrl(navState.url);
+          }}
+          onContentProcessDidTerminate={syntheticEvent => {
+            const { nativeEvent } = syntheticEvent;
+            console.warn('Content process terminated, reloading', nativeEvent);
+            console.warn('WebView Crashed:');
+            webviewRef.current?.reload();
+            setAutoIncrementingNumber(autoIncrementingNumber + 1);
           }}
         />
       ) : (
         <></>
       )}
-      {/* {didReceivedNotification ? (
-        <WebView
-          source={{
-            uri: url,
-          }}
-          ref={webviewRef}
-          onMessage={onMessage}
-        />
-      ) : (
-        <WebView
-          source={{
-            uri: url,
-          }}
-          ref={webviewRef}
-          onMessage={onMessage}
-        />
-      )} */}
     </SafeAreaView>
   );
 }

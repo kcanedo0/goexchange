@@ -31,7 +31,7 @@
 		00E356EE1AD99517003FC87E /* goexchangeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = goexchangeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* goexchangeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = goexchangeTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* goexchange.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = goexchange.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Go Exchange.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Go Exchange.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = goexchange/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = goexchange/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = goexchange/Images.xcassets; sourceTree = "<group>"; };
@@ -42,6 +42,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = goexchange/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D72C01C1251DAC5552B2C9F /* Pods-goexchange-goexchangeTests.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goexchange-goexchangeTests.adhoc.xcconfig"; path = "Target Support Files/Pods-goexchange-goexchangeTests/Pods-goexchange-goexchangeTests.adhoc.xcconfig"; sourceTree = "<group>"; };
 		9A6E97F3E274BDF5D55FAACB /* Pods-goexchange-goexchangeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-goexchange-goexchangeTests.debug.xcconfig"; path = "Target Support Files/Pods-goexchange-goexchangeTests/Pods-goexchange-goexchangeTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A20255872BEB39E100315F0A /* goexchangeRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = goexchangeRelease.entitlements; path = goexchange/goexchangeRelease.entitlements; sourceTree = "<group>"; };
 		A28E91002BD98EBD006128F4 /* goexchange.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = goexchange.entitlements; path = goexchange/goexchange.entitlements; sourceTree = "<group>"; };
 		A2A4E3762BD99BA800140B15 /* NotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationManager.h; sourceTree = "<group>"; };
 		A2A4E3772BD99BBD00140B15 /* NotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationManager.m; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 		13B07FAE1A68108700A75B9A /* goexchange */ = {
 			isa = PBXGroup;
 			children = (
+				A20255872BEB39E100315F0A /* goexchangeRelease.entitlements */,
 				A28E91002BD98EBD006128F4 /* goexchange.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -140,7 +142,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* goexchange.app */,
+				13B07F961A680F5B00A75B9A /* Go Exchange.app */,
 				00E356EE1AD99517003FC87E /* goexchangeTests.xctest */,
 			);
 			name = Products;
@@ -201,7 +203,7 @@
 			);
 			name = goexchange;
 			productName = goexchange;
-			productReference = 13B07F961A680F5B00A75B9A /* goexchange.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Go Exchange.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -485,13 +487,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = goexchange/goexchange.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 7C284HW7NH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = goexchange/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Go Exchange";
+				INFOPLIST_KEY_CFBundleDisplayName = "Go&#x0020;Exchange";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -503,7 +506,7 @@
 					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.gorentals.goexchange;
-				PRODUCT_NAME = goexchange;
+				PRODUCT_NAME = "Go Exchange";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Go Exchange Development";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -523,14 +526,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = goexchange/goexchange.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_ENTITLEMENTS = goexchange/goexchangeRelease.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 7C284HW7NH;
 				INFOPLIST_FILE = goexchange/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Go Exchange";
+				INFOPLIST_KEY_CFBundleDisplayName = "Go&#x0020;Exchange";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -542,9 +545,9 @@
 					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.gorentals.goexchange;
-				PRODUCT_NAME = goexchange;
+				PRODUCT_NAME = "Go Exchange";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Go Exchange Appstore";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Go Exchange Development";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -626,7 +629,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -696,7 +702,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -767,7 +776,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -784,11 +796,11 @@
 				CODE_SIGN_ENTITLEMENTS = goexchange/goexchange.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 7C284HW7NH;
 				INFOPLIST_FILE = goexchange/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Go Exchange";
+				INFOPLIST_KEY_CFBundleDisplayName = "Go&#x0020;Exchange";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -800,7 +812,7 @@
 					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.gorentals.goexchange;
-				PRODUCT_NAME = goexchange;
+				PRODUCT_NAME = "Go Exchange";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Go Exchange Adhoc";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
